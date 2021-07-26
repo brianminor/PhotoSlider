@@ -130,10 +130,10 @@ public class ViewController: UIViewController {
     lazy public var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.frame = .zero
+        pageControl.numberOfPages = self.imageResources()!.count
         if self.imageResources()!.count > 1 {
             pageControl.numberOfPages = self.imageResources()!.count - 2
         }
-        pageControl.numberOfPages = self.imageResources()!.count
         pageControl.isUserInteractionEnabled = false
         return pageControl
     }()
