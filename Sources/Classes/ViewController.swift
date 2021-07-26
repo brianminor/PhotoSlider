@@ -261,6 +261,7 @@ public class ViewController: UIViewController {
 
     @objc func closeButtonDidTap(_ sender: UIButton) {
         delegate?.photoSliderControllerWillDismiss?(self)
+        self.scrollView.alpha = 0.0
         dissmissViewControllerAnimated(animated: true)
     }
 
