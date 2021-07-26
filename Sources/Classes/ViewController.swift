@@ -130,6 +130,9 @@ public class ViewController: UIViewController {
     lazy public var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.frame = .zero
+        if self.imageResources()!.count > 1 {
+            pageControl.numberOfPages = self.imageResources()!.count - 2
+        }
         pageControl.numberOfPages = self.imageResources()!.count
         pageControl.isUserInteractionEnabled = false
         return pageControl
@@ -489,6 +492,20 @@ extension ViewController: UIScrollViewDelegate {
         currentPage = page
 
         if visiblePageControl {
+            if imageResources()!.count > 1 {
+                pageControl.isHidden = false
+                if page == 0 {
+                    pageControl.currentPage = (imageResources()!.count - 1)
+                } else if page == 1 {
+                    pageControl.currentPage = 0
+                } else if page > 1 && page < (imageResources()!.count - 1) {
+                    pageControl.currentPage = page - 1
+                }else if page == (imageResources()!.count - 1) {
+                    pageControl.currentPage = 0
+                }
+            } else {
+                pageControl.isHidden = true
+            }
             pageControl.currentPage = currentPage
         }
 
@@ -563,6 +580,24 @@ extension ViewController: UIScrollViewDelegate {
         }
 
         scrollMode = .None
+        
+        let offset = scrollView.contentOffset
+        let page = Int(offset.x / self.view.frame.size.width)
+        let width = self.view.frame.size.width
+        let height = self.view.frame.size.height
+        
+        if imageResources()!.count > 1 {
+            let totalPages = imageResources()!.count -  2
+            
+            if currentPage == 0 {
+                print("0 Page: \(page) - Total: \(totalPages)")
+                scrollView.scrollRectToVisible(CGRect(x: width, y: scrollView.contentOffset.y, width: width*CGFloat(totalPages), height: height), animated: false)
+            } else if currentPage > totalPages {
+                print("1 Page: \(page) - Total: \(totalPages)")
+                
+                scrollView.scrollRectToVisible(CGRect(x: width, y: scrollView.contentOffset.y, width: width, height: height), animated: false)
+            }
+        }
 
     }
 }
