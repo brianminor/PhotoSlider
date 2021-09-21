@@ -74,8 +74,9 @@ class ViewController: UIViewController {
         }
 
         var width = view.bounds.width
-        width = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
-
+        if #available(iOS 11.0, *) {
+            width = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
+        }
         collectionView.contentOffset = CGPoint(x: CGFloat(currentRow) * width, y: 0.0)
     }
     
@@ -125,7 +126,6 @@ extension ViewController: UICollectionViewDelegate {
         photoSlider.currentPage = indexPath.row
         //photoSlider.visibleCloseButton = false
         //photoSlider.visiblePageControl = false
-        photoSlider.visibleShareButton = true
         photoSlider.captionNumberOfLines = 0
        
         // UIViewControllerTransitioningDelegate
@@ -152,10 +152,18 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
             
         } else {
             let height: CGFloat
-            height = view.safeAreaLayoutGuide.layoutFrame.height
+            if #available(iOS 11.0, *) {
+                height = view.safeAreaLayoutGuide.layoutFrame.height
+            } else {
+                height = view.bounds.height
+            }
+
             return CGSize(width: tableView.bounds.width, height: height)
+            
         }
+        
     }
+    
 }
 
 // MARK: - UITableViewDataSource
@@ -225,13 +233,14 @@ extension ViewController: ZoomingAnimationControllerTransitioning {
         let imageView = UIImageView(image: cell.imageView.image)
         
         var frame = cell.imageView.frame
-        frame.origin.y += view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        frame.origin.y += UIApplication.shared.statusBarFrame.height
         // tune in UIImageView
-        frame.origin.x = view.safeAreaInsets.left
-        if view.bounds.width > view.bounds.height {
-            frame.size.height = view.safeAreaLayoutGuide.layoutFrame.height
+        if #available(iOS 11.0, *) {
+            frame.origin.x = view.safeAreaInsets.left
+            if view.bounds.width > view.bounds.height {
+                frame.size.height = view.safeAreaLayoutGuide.layoutFrame.height
+            }
         }
-
         imageView.frame = frame
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -248,33 +257,48 @@ extension ViewController: ZoomingAnimationControllerTransitioning {
         guard let cell = collectionView.visibleCells.first as? ImageCollectionViewCell else {
             return
         }
-        let statusBarHeight: CGFloat = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-        let topPosition: CGFloat = view.safeAreaLayoutGuide.layoutFrame.origin.y
+        let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
         var frame = CGRect.zero
 
         if view.bounds.size.width < view.bounds.height {
+
             if image.size.height < image.size.width {
                 let width = (sourceImageView.image!.size.width * sourceImageView.bounds.size.width) / sourceImageView.image!.size.height
                 let x = (width - cell.imageView.bounds.height) * 0.5
-                frame = CGRect(x: -1.0 * x, y: topPosition, width: width, height: cell.imageView.bounds.height)
+                frame = CGRect(x: -1.0 * x, y: statusBarHeight, width: width, height: cell.imageView.bounds.height)
             } else {
-                frame = CGRect(x: 0.0, y: topPosition, width: view.bounds.width, height: view.bounds.width)
+                frame = CGRect(x: 0.0, y: statusBarHeight, width: view.bounds.width, height: view.bounds.width)
             }
             
         } else {
             let width: CGFloat
             let x: CGFloat
-            width = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
-            x = view.safeAreaInsets.left
+            if #available(iOS 11.0, *) {
+                width = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
+                x = view.safeAreaInsets.left
+            } else {
+                width = view.bounds.width
+                x = 0
+            }
 
             let height: CGFloat
-            height = view.safeAreaLayoutGuide.layoutFrame.height
+            if #available(iOS 11.0, *) {
+                height = view.safeAreaLayoutGuide.layoutFrame.height
+            } else {
+                height = (image.size.height * width) / image.size.width
+            }
 
             let y: CGFloat
-            y = (height - view.safeAreaLayoutGuide.layoutFrame.height - statusBarHeight) * 0.5
+            if #available(iOS 11.0, *) {
+                y = (height - view.safeAreaLayoutGuide.layoutFrame.height - statusBarHeight) * 0.5
+            } else {
+                y = (height - UIScreen.main.bounds.height - statusBarHeight) * 0.5
+            }
+
             frame = CGRect(x: x, y: -1.0 * y, width: width, height: height)
         }
         sourceImageView.frame = frame
+        
     }
 }
 

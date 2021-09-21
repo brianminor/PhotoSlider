@@ -41,7 +41,10 @@ public class ViewController: UIViewController {
             height: self.view.bounds.height * 3.0
         )
 
-        scrollView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 11.0, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
+
         return scrollView
     }()
 
@@ -61,7 +64,7 @@ public class ViewController: UIViewController {
         if let captionHeight = captionHeight {
             var y = view.bounds.height - captionHeight - 32.0
             var height = captionHeight + 32.0
-            if let window = UIApplication.shared.keyWindow {
+            if #available(iOS 11.0, *), let window = UIApplication.shared.keyWindow {
                 let bottomSafeInsetSpacing = window.safeAreaInsets.bottom
                 height += bottomSafeInsetSpacing
                 y -= bottomSafeInsetSpacing
@@ -81,8 +84,8 @@ public class ViewController: UIViewController {
 
     lazy var closeButton: UIButton = {
         let closeButton = UIButton(frame: CGRect.zero)
-        let image = UIImage(named: "PhotoSliderClose", in: resourceBundle(), compatibleWith: nil)
-        closeButton.setImage(image, for: .normal)
+        let imagePath = self.resourceBundle().path(forResource: "PhotoSliderClose", ofType: "png")
+        closeButton.setImage(UIImage(contentsOfFile: imagePath!), for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
         closeButton.imageView?.contentMode = UIView.ContentMode.center
         closeButton.layer.shadowColor = UIColor.black.cgColor
@@ -94,8 +97,8 @@ public class ViewController: UIViewController {
 
     lazy var shareButton: UIButton = {
         let shareButton = UIButton(frame: CGRect.zero)
-        let image = UIImage(named: "PhotoSliderShare", in: resourceBundle(), compatibleWith: nil)
-        shareButton.setImage(image, for: .normal)
+        let imagePath = self.resourceBundle().path(forResource: "PhotoSliderShare", ofType: "png")
+        shareButton.setImage(UIImage(contentsOfFile: imagePath!), for: .normal)
         shareButton.addTarget(self, action: #selector(shareButtonDidTap(_:)), for: .touchUpInside)
         shareButton.imageView?.contentMode = UIView.ContentMode.center
         return shareButton
@@ -310,32 +313,61 @@ fileprivate extension ViewController {
 
     func layoutCloseButton() {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-        [
-            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
-            closeButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0.0),
-            closeButton.heightAnchor.constraint(equalToConstant: 52.0),
-            closeButton.widthAnchor.constraint(equalToConstant: 52.0)
-        ].forEach { $0.isActive = true }
+        if #available(iOS 11.0, *) {
+            [
+                closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
+                closeButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0.0),
+                closeButton.heightAnchor.constraint(equalToConstant: 52.0),
+                closeButton.widthAnchor.constraint(equalToConstant: 52.0),
+                ].forEach { $0.isActive = true }
+        } else {
+            [
+                closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 0.0),
+                closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0.0),
+                closeButton.heightAnchor.constraint(equalToConstant: 52.0),
+                closeButton.widthAnchor.constraint(equalToConstant: 52.0),
+                ].forEach { $0.isActive = true }
+
+        }
     }
 
     func layoutShareButton() {
         shareButton.translatesAutoresizingMaskIntoConstraints = false
-        [
-            shareButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
-            shareButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0.0),
-            shareButton.heightAnchor.constraint(equalToConstant: 52.0),
-            shareButton.widthAnchor.constraint(equalToConstant: 52.0)
-        ].forEach { $0.isActive = true }
+        if #available(iOS 11.0, *) {
+            [
+                shareButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
+                shareButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0.0),
+                shareButton.heightAnchor.constraint(equalToConstant: 52.0),
+                shareButton.widthAnchor.constraint(equalToConstant: 52.0),
+                ].forEach { $0.isActive = true }
+        } else {
+            [
+                shareButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 0.0),
+                shareButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0.0),
+                shareButton.heightAnchor.constraint(equalToConstant: 52.0),
+                shareButton.widthAnchor.constraint(equalToConstant: 52.0),
+                ].forEach { $0.isActive = true }
+
+        }
     }
 
     func layoutPageControl() {
         pageControl.translatesAutoresizingMaskIntoConstraints = false
-        [
-            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0.0),
-            pageControl.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            pageControl.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0.0),
-            pageControl.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0.0)
-        ].forEach { $0.isActive = true }
+        if #available(iOS 11.0, *) {
+            [
+                pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0.0),
+                pageControl.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                pageControl.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0.0),
+                pageControl.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0.0),
+                ].forEach { $0.isActive = true }
+        } else {
+            [
+                pageControl.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0.0),
+                pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                pageControl.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0.0),
+                pageControl.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0.0),
+                ].forEach { $0.isActive = true }
+        }
     }
 
     func layoutCaptionLabel() {
@@ -351,10 +383,19 @@ fileprivate extension ViewController {
         }
 
         captionLabel.translatesAutoresizingMaskIntoConstraints = false
-        [   captionLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32.0),
-            captionLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -16.0),
-            captionLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16.0)
-        ].forEach { $0.isActive = true }
+        if #available(iOS 11.0, *) {
+            [
+                captionLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32.0),
+                captionLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -16.0),
+                captionLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16.0),
+                ].forEach { $0.isActive = true }
+        } else {
+            [
+                captionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32.0),
+                captionLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16.0),
+                captionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16.0),
+                ].forEach { $0.isActive = true }
+        }
 
         if let captionHeight = captionHeight {
             captionLabel.heightAnchor.constraint(equalToConstant: captionHeight).isActive = true
@@ -369,6 +410,7 @@ fileprivate extension ViewController {
          captionBackgroundView.topAnchor.constraint(equalTo: captionLabel.topAnchor, constant: -16.0)
             ].forEach { $0.isActive = true }
     }
+
 }
 
 // MARK: - UIScrollViewDelegate
@@ -612,12 +654,20 @@ extension ViewController: PhotoSliderImageViewDelegate {
         })
     }
 
-    private func resourceBundle() -> Bundle {
-        #if SWIFT_PACKAGE
-              return Bundle.module
-        #else
-              return Bundle(for: type(of: self))
-        #endif
+    fileprivate func resourceBundle() -> Bundle {
+
+        let bundlePath = Bundle.main.path(
+            forResource: "PhotoSlider",
+            ofType: "bundle",
+            inDirectory: "Frameworks/PhotoSlider.framework"
+        )
+
+        if bundlePath != nil {
+            return Bundle(path: bundlePath!)!
+        }
+
+        return Bundle(for: type(of: self))
+
     }
 }
 
