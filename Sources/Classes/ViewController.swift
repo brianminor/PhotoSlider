@@ -506,7 +506,6 @@ extension ViewController: UIScrollViewDelegate {
             } else {
                 pageControl.isHidden = true
             }
-            //pageControl.currentPage = currentPage
         }
 
     }
