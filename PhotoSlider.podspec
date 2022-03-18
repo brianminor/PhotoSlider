@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/nakajijapan/PhotoSlider.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/nakajijapan'
 
-  s.platform     = :ios, '10.0'
+  s.platform     = :ios, '12.0'
   s.requires_arc = true
   s.swift_versions = ['4.2']
 
