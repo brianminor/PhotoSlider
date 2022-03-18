@@ -142,7 +142,7 @@ public class ViewController: UIViewController {
     public var hasCaptionShadow = true
     public var captionFont: UIFont?
     public var captionLineHeight: CGFloat?
-    public var captionBackgroundViewColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4)
+    public var captionBackgroundViewColor = UIColor.clear
     public var backgroundViewColor = UIColor.black
     public var captionTextColor = UIColor.white
 
