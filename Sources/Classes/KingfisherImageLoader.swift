@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Kingfisher
+import SDWebImage
 
 public class KingfisherImageLoader: ImageLoader {
     public func load(
@@ -15,23 +15,28 @@ public class KingfisherImageLoader: ImageLoader {
         fromURL url: URL?,
         progress: @escaping ImageLoader.ProgressBlock,
         completion: @escaping ImageLoader.CompletionBlock) {
-        imageView?.kf.setImage(
-            with: url,
-            placeholder: nil,
-            options: [.transition(.fade(1))],
-            progressBlock: { (receivedSize, totalSize) in
-                progress(
-                    Int(truncatingIfNeeded: receivedSize),
-                    Int(truncatingIfNeeded: totalSize)
-                )
-        }, completionHandler: { result in
-            switch result {
-            case .success(let value):
-                let image = value.image
-                completion(image)
-            case .failure(_):
-                completion(nil)
-            }
-        })
+            
+            
+            
+            imageView?.sd_setImage(with: url, placeholderImage: nil)
+            
+//        imageView?.kf.setImage(
+//            with: url,
+//            placeholder: nil,
+//            options: [.transition(.fade(1))],
+//            progressBlock: { (receivedSize, totalSize) in
+//                progress(
+//                    Int(truncatingIfNeeded: receivedSize),
+//                    Int(truncatingIfNeeded: totalSize)
+//                )
+//        }, completionHandler: { result in
+//            switch result {
+//            case .success(let value):
+//                let image = value.image
+//                completion(image)
+//            case .failure(_):
+//                completion(nil)
+//            }
+//        })
     }
 }

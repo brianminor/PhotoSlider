@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Kingfisher
+import SDWebImage
 
 @objc protocol PhotoSliderImageViewDelegate {
     func photoSliderImageViewDidEndZooming(_ imageView: PhotoSlider.ImageView, atScale scale: CGFloat)
