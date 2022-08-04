@@ -18,7 +18,20 @@ public class KingfisherImageLoader: ImageLoader {
             
             
             
-            imageView?.sd_setImage(with: url, placeholderImage: nil)
+            
+            
+          imageView?.sd_setImage(
+            with: url,
+            placeholderImage: nil,
+            options: SDWebImageOptions(rawValue: 0)) { image, error, cache, imageUrl in
+                if error == nil {
+                    completion(image)
+                } else {
+                    completion(nil)
+                }
+            }
+            
+            
             
 //        imageView?.kf.setImage(
 //            with: url,
