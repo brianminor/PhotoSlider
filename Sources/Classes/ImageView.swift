@@ -60,7 +60,7 @@ class ImageView: UIView {
 
         // progress view
         activityLoading = UIActivityIndicatorView(frame: CGRect.zero)
-        activityLoading..hidesWhenStopped = true
+        activityLoading.hidesWhenStopped = true
         addSubview(activityLoading)
         layoutProgressView()
 
@@ -141,7 +141,7 @@ class ImageView: UIView {
                 //self?.progressView.animateCurveToProgress(progress: progress)
             },
             completion: { [weak self] (image) in
-                activityLoading.stopAnimating()
+                self?.activityLoading.stopAnimating()
                 //self?.progressView.isHidden = true
                 if let image = image {
                     self?.layoutImageView(image: image)
