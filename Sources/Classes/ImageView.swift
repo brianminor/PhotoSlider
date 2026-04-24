@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 @objc protocol PhotoSliderImageViewDelegate {
     func photoSliderImageViewDidEndZooming(_ imageView: PhotoSlider.ImageView, atScale scale: CGFloat)
@@ -20,7 +19,7 @@ class ImageView: UIView {
     //var progressView: PhotoSlider.ProgressView!
     var activityLoading: UIActivityIndicatorView!
     weak var delegate: PhotoSliderImageViewDelegate?
-    weak var imageLoader: PhotoSlider.ImageLoader?
+    weak var imageLoader: PhotoSliderImageLoading?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -134,19 +133,16 @@ class ImageView: UIView {
 
     func loadImage(imageURL: URL) {
         activityLoading.startAnimating()
-        imageLoader?.load(
-            imageView: imageView,
-            fromURL: imageURL,
-            progress: {  (receivedSize, totalSize) in
-                
-            },
-            completion: { [weak self] (image) in
-                self?.activityLoading.stopAnimating()
-                if let image = image {
-                    self?.layoutImageView(image: image)
-                }
+
+        imageLoader?.load(from: imageURL, into: imageView) { [weak self] image in
+            guard let self = self else { return }
+
+            self.activityLoading.stopAnimating()
+
+            if let image = image {
+                self.layoutImageView(image: image)
             }
-        )
+        }
     }
 
     func setImage(image: UIImage) {
