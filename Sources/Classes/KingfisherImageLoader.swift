@@ -7,44 +7,49 @@
 //
 
 import UIKit
+import SDWebImage
 
 public class KingfisherImageLoader: ImageLoader {
-
-    private var task: URLSessionDataTask?
-
-    public init() {}
-
     public func load(
         imageView: UIImageView?,
         fromURL url: URL?,
         progress: @escaping ImageLoader.ProgressBlock,
-        completion: @escaping ImageLoader.CompletionBlock
-    ) {
-
-        guard let imageView = imageView, let url = url else {
-            completion(nil)
-            return
-        }
-
-        // Cancel any existing task
-        task?.cancel()
-
-        let request = URLRequest(url: url)
-        task = URLSession.shared.dataTask(with: request) { data, response, error in
-
-            guard let data = data, error == nil, let image = UIImage(data: data) else {
-                DispatchQueue.main.async {
+        completion: @escaping ImageLoader.CompletionBlock) {
+            
+            
+            
+            
+            
+          imageView?.sd_setImage(
+            with: url,
+            placeholderImage: nil,
+            options: SDWebImageOptions(rawValue: 0)) { image, error, cache, imageUrl in
+                if error == nil {
+                    completion(image)
+                } else {
                     completion(nil)
                 }
-                return
             }
-
-            DispatchQueue.main.async {
-                imageView.image = image
-                completion(image)
-            }
-        }
-
-        task?.resume()
+            
+            
+            
+//        imageView?.kf.setImage(
+//            with: url,
+//            placeholder: nil,
+//            options: [.transition(.fade(1))],
+//            progressBlock: { (receivedSize, totalSize) in
+//                progress(
+//                    Int(truncatingIfNeeded: receivedSize),
+//                    Int(truncatingIfNeeded: totalSize)
+//                )
+//        }, completionHandler: { result in
+//            switch result {
+//            case .success(let value):
+//                let image = value.image
+//                completion(image)
+//            case .failure(_):
+//                completion(nil)
+//            }
+//        })
     }
 }
